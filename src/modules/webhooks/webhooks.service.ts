@@ -7,22 +7,22 @@ import {
 import { ConfigService } from '@nestjs/config';
 import type { Prisma } from '@prisma/client';
 import { Webhook } from '@prisma/client';
-
-//import pRetry from 'p-retry';
-
+import pRetry from 'p-retry';
 import {
   UNAUTHORIZED_RESOURCE,
   WEBHOOK_NOT_FOUND,
 } from '@/errors/errors.constants';
 import { PrismaService } from '@/prisma/prisma.service';
 import { Expose } from '@/prisma/prisma.interface';
+import PQueue from 'p-queue';
+import axios from 'axios';
 
 
 
 @Injectable()
 export class WebhooksService {
   private readonly logger = new Logger(WebhooksService.name);
-  //private queue = new PQueue({ concurrency: 1 });
+  private queue = new PQueue({ concurrency: 1 });
 
   constructor(
     private prisma: PrismaService,
@@ -157,7 +157,7 @@ export class WebhooksService {
       })
       .then((webhooks) => {
         webhooks.forEach((webhook) =>
-         /*  this.queue
+          this.queue
             .add(() =>
               pRetry(() => this.callWebhook(webhook, event), {
                 retries:
@@ -179,17 +179,16 @@ export class WebhooksService {
               }),
             )
             .then(() => {})
-            .catch(() => {}), */
-            this.logger.error(`Triggering webhoook failed, retrying (webhooks attempts left)`)
+            .catch(() => {}), 
         );
       })
       .catch((error) => this.logger.error('Unable to get webhooks', error));
   }
 
   private async callWebhook(webhook: Webhook, event: string) {
-    /* if (webhook.contentType === 'application/json')
-      await got(webhook.url, { method: 'POST', body: event });
-    else await got(webhook.url, { method: 'POST', body: event }); */
+    if (webhook.contentType === 'application/json')
+      await axios(webhook.url, { method: 'POST', data: event });
+    else await axios(webhook.url, { method: 'POST', data: event });
     await this.prisma.webhook.update({
       where: { id: webhook.id },
       data: { lastFiredAt: new Date() },

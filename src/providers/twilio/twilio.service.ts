@@ -1,7 +1,7 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-/* import PQueue from 'p-queue';
-import pRetry from 'p-retry'; */
+import PQueue from 'p-queue';
+import pRetry from 'p-retry';
 import { Twilio } from 'twilio';
 import { MessageListInstanceCreateOptions } from 'twilio/lib/rest/api/v2010/account/message';
 /* import TwilioClient from 'twilio/lib/rest/Twilio'; */
@@ -10,7 +10,7 @@ import { MessageListInstanceCreateOptions } from 'twilio/lib/rest/api/v2010/acco
 export class TwilioService {
   client: any;
   logger = new Logger(TwilioService.name);
-  /* private queue = new PQueue({ concurrency: 1 }); */
+  private queue = new PQueue({ concurrency: 1 });
 
   constructor(private configService: ConfigService) {
     const twilioAccountSid = this.configService.get<string>(
@@ -28,7 +28,7 @@ export class TwilioService {
   }
 
   send(options: MessageListInstanceCreateOptions) {
-   /*  this.queue
+   this.queue
       .add(() =>
         pRetry(() => this.sendSms(options), {
           retries: this.configService.get<number>('sms.retries') ?? 3,
@@ -41,8 +41,7 @@ export class TwilioService {
         }),
       )
       .then(() => {})
-      .catch(() => {}); */
-      console.log("");
+      .catch(() => {});
   }
 
   private async sendSms(options: MessageListInstanceCreateOptions) {
