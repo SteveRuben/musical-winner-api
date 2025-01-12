@@ -1,14 +1,14 @@
 import { Injectable, Logger, OnModuleDestroy } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import geolite2, { GeoIpDbName, WrappedReader } from 'geolite2-redist';
+import geolite2 from 'geolite2-redist';
 import maxmind, { CityResponse, Reader } from 'maxmind';
-import QuickLRU from 'quick-lru';
+import QuickLRU = require('quick-lru');
 
 @Injectable()
 export class GeolocationService implements OnModuleDestroy {
   constructor(private configService: ConfigService) {}
 
-  private lookup : Reader<CityResponse> | WrappedReader<any> | null = null;
+  private lookup : Reader<CityResponse> | null = null;
   logger = new Logger(GeolocationService.name);
   private lru = new QuickLRU<string, Partial<CityResponse>>({
     maxSize:
@@ -41,7 +41,7 @@ export class GeolocationService implements OnModuleDestroy {
     ipAddress: string,
   ): Promise<Partial<CityResponse>> {
     if (!this.lookup)
-      this.lookup = await geolite2.open(GeoIpDbName.City, (path) =>
+      this.lookup = await geolite2.open('GeoLite2-City', (path) =>//'GeoLite2-City', geolite2.GeoIpDbName.City
         maxmind.open(path),
       );
     this.logger.verbose(this.lookup);
