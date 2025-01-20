@@ -42,6 +42,7 @@ model User {
   identities           Identity[]           @relation("userIdentity")
   memberships          Membership[]         @relation("userMembership")
   sessions             Session[]            @relation("userSession")
+  account              Account?             @relation("userAccount")
 
   @@index([prefersEmailId], name: "prefersEmailId")
 }
@@ -244,6 +245,554 @@ model AuditLog {
   @@index([userId], name: "auditLog_userId_idx")
 }
 
+model AccountEvent {
+  id             Int      @id @default(autoincrement())
+  accountId      Int?     @map("account_id")
+  spaceId        Int?     @map("space_id")
+  key            String
+  value          String?
+  ip             String?
+  browser        String?
+  device         String?
+  vendor         String?
+  engine         String?
+  os             String?
+  osVersion      String?  @map("os_version")
+  engineVersion  String?  @map("engine_version")
+  browserVersion String?  @map("browser_version")
+  reqUrl         String?  @map("req_url")
+  userAgent      String?  @map("user_agent")
+  meta           String?
+  createdAt      DateTime @default(now()) @map("created_at")
+
+  account Account? @relation(fields: [accountId], references: [id])
+  session Space?   @relation(fields: [spaceId], references: [id])
+
+  @@index([accountId], name: "account_events_account_id_index")
+  @@index([browser], name: "account_events_browser_index")
+  @@index([device], name: "account_events_device_index")
+  @@index([engine], name: "account_events_engine_index")
+  @@index([ip], name: "account_events_ip_index")
+  @@index([key], name: "account_events_key_index")
+  @@index([os], name: "account_events_os_index")
+  @@index([spaceId], name: "account_events_session_id_index")
+  @@index([value], name: "account_events_value_index")
+  @@index([vendor], name: "account_events_vendor_index")
+  @@map("account_events")
+}
+
+model Account {
+  createdAt  DateTime @default(now())
+  id         Int      @id @default(autoincrement())
+  userId     Int      @unique @map("userId")
+  // Profil
+  bio        String?
+  expertise  String[]
+  hourlyRate Float?
+  experience Int?
+
+  events                AccountEvent[]
+  sessions              Space[]
+  widgets               Widget[]
+  participants          Participant[]
+  analyticsCameraUsage  AnalyticsCameraUsage[]
+  analyticsMicUsage     AnalyticsMicUsage[]
+  analyticsRoomUsage    AnalyticsRoomUsage[]
+  errors                Error[]
+  experienceRatings     ExperienceRating[]
+  magicCodes            MagicCode[]
+  messages              Message[]
+  roomMemberships       RoomMembership[]
+  roomParticipantStates ParticipantTransform[]
+  roomTemplates         RoomTemplate[]
+  createdRooms          Room[]
+  slackActions          SlackAction[]
+  slackInstalls         SlackInstall[]
+  wallpapers            Wallpaper[]
+  participantState      ParticipantState?
+  surveyResponses       SurveyResponse[]
+  user                  User                   @relation("userAccount", fields: [userId], references: [id])
+
+  @@index([userId], name: "account_userId_idx")
+}
+
+model AnalyticsCameraUsage {
+  id              Int      @id @default(autoincrement())
+  roomid          Int      @map("room_id")
+  accountId       Int?     @map("account_id")
+  participantId   Int?     @map("participant_id")
+  isToggledOn     Boolean  @map("is_toggled_on")
+  toggledAt       DateTime @map("toggled_at")
+  lastHeartbeatAt DateTime @map("last_heartbeat_at")
+  createdAt       DateTime @default(now()) @map("created_at")
+
+  room        Room         @relation(fields: [roomid], references: [id])
+  account     Account?     @relation(fields: [accountId], references: [id])
+  participant Participant? @relation(fields: [participantId], references: [id])
+
+  @@index([accountId, participantId], name: "analytics_camera_usage_account_id_participant_id_index")
+  @@index([isToggledOn], name: "analytics_camera_usage_is_toggled_on_index")
+  @@index([roomid], name: "analytics_camera_usage_room_id_index")
+  @@index([toggledAt], name: "analytics_camera_usage_toggled_at_index")
+  @@map("analytics_camera_usage")
+}
+
+model AnalyticsMicUsage {
+  id              Int      @id @default(autoincrement())
+  roomId          Int      @map("room_id")
+  accountId       Int?     @map("account_id")
+  participantId   Int?     @map("participant_id")
+  isToggledOn     Boolean  @map("is_toggled_on")
+  toggledAt       DateTime @map("toggled_at")
+  lastHeartbeatAt DateTime @map("last_heartbeat_at")
+  createdAt       DateTime @default(now()) @map("created_at")
+
+  room        Room         @relation(fields: [roomId], references: [id])
+  account     Account?     @relation(fields: [accountId], references: [id])
+  participant Participant? @relation(fields: [participantId], references: [id])
+
+  @@index([accountId, participantId], name: "analytics_mic_usage_account_id_participant_id_index")
+  @@index([isToggledOn], name: "analytics_mic_usage_is_toggled_on_index")
+  @@index([roomId], name: "analytics_mic_usage_room_id_index")
+  @@index([toggledAt], name: "analytics_mic_usage_toggled_at_index")
+  @@map("analytics_mic_usage")
+}
+
+model AnalyticsRoomParticipantCount {
+  id               Int      @id @default(autoincrement())
+  roomId           Int      @map("room_id")
+  participantCount Int      @map("participant_count")
+  measuredAt       DateTime @map("measured_at")
+  createdAt        DateTime @default(now()) @map("created_at")
+
+  room Room @relation(fields: [roomId], references: [id])
+
+  @@index([measuredAt], name: "analytics_room_participant_count_measured_at_index")
+  @@index([participantCount], name: "analytics_room_participant_count_participant_count_index")
+  @@index([roomId], name: "analytics_room_participant_count_room_id_index")
+  @@map("analytics_room_participant_count")
+}
+
+model AnalyticsRoomUsage {
+  id              Int      @id @default(autoincrement())
+  roomId          Int      @map("room_id")
+  accountId       Int?     @map("account_id")
+  participantId   Int?     @map("participant_id")
+  beganAt         DateTime @map("began_at")
+  lastHeartbeatAt DateTime @map("last_heartbeat_at")
+  createdAt       DateTime @default(now()) @map("created_at")
+
+  room        Room         @relation(fields: [roomId], references: [id])
+  account     Account?     @relation(fields: [accountId], references: [id])
+  participant Participant? @relation(fields: [participantId], references: [id])
+
+  @@index([accountId, participantId], name: "analytics_room_usage_account_id_participant_id_index")
+  @@index([beganAt, lastHeartbeatAt], name: "analytics_room_usage_began_at_last_heartbeat_at_index")
+  @@index([roomId], name: "analytics_room_usage_room_id_index")
+  @@map("analytics_room_usage")
+}
+
+model AnalyticsTotalParticipantCount {
+  id         Int      @id @default(autoincrement())
+  count      Int
+  measuredAt DateTime @map("measured_at")
+  createdAt  DateTime @default(now()) @map("created_at")
+
+  @@index([count], name: "analytics_total_participant_counts_count_index")
+  @@index([measuredAt], name: "analytics_total_participant_counts_measured_at_index")
+  @@map("analytics_total_participant_counts")
+}
+
+model Error {
+  id        Int      @id @default(autoincrement())
+  accountId Int?     @map("account_id")
+  httpCode  Int?     @map("http_code")
+  code      String?  @map("code")
+  stack     String?
+  message   String?
+  tag       String?
+  createdAt DateTime @default(now()) @map("created_at")
+
+  account Account? @relation(fields: [accountId], references: [id])
+
+  @@index([accountId], name: "errors_account_id_index")
+  @@index([httpCode], name: "errors_http_code_index")
+  @@index([code], name: "errors_code_index")
+  @@index([tag], name: "errors_tag_index")
+  @@map("errors")
+}
+
+model ExperienceRating {
+  id          Int      @id @default(autoincrement())
+  createdAt   DateTime @default(now()) @map("created_at")
+  submittedAt DateTime @map("submitted_at")
+  updatedAt   DateTime @default(now()) @map("updated_at")
+  rating      Int
+  feedback    String?
+  accountId   Int?     @map("account_id")
+  roomId      Int?     @map("room_id")
+  spaceId     Int?     @map("space_id")
+
+  account Account? @relation(fields: [accountId], references: [id])
+  room    Room?    @relation(fields: [roomId], references: [id])
+  space   Space?   @relation(fields: [spaceId], references: [id])
+
+  @@index([accountId], name: "experience_ratings_account_id_index")
+  @@index([rating], name: "experience_ratings_rating_index")
+  @@index([roomId], name: "experience_ratings_room_id_index")
+  @@index([spaceId], name: "experience_ratings_space_id_index")
+  @@map("experience_ratings")
+}
+
+model MagicCode {
+  id         Int       @id @default(autoincrement())
+  accountId  Int       @map("account_id")
+  code       String    @unique
+  action     String
+  meta       String?
+  issuedAt   DateTime  @map("issued_at")
+  expiresAt  DateTime? @map("expires_at")
+  resolvedAt DateTime? @map("resolved_at")
+  revokedAt  DateTime? @map("revoked_at")
+  createdAt  DateTime  @default(now()) @map("created_at")
+  updatedAt  DateTime  @default(now()) @map("updated_at")
+
+  account Account @relation(fields: [accountId], references: [id])
+
+  @@index([action], name: "magic_codes_action_index")
+  @@index([accountId], name: "magic_codes_account_id_index")
+  @@index([code], name: "magic_codes_code_index")
+  @@map("magic_codes")
+}
+
+model Message {
+  id        Int      @id @default(autoincrement())
+  chatId    Int?     @map("chat_id")
+  content   String?
+  senderId  Int?     @map("sender_id")
+  createdAt DateTime @default(now()) @map("created_at")
+
+  chat   Widget?  @relation(fields: [chatId], references: [id])
+  sender Account? @relation(fields: [senderId], references: [id])
+
+  @@index([chatId], name: "messages_chat_id_index")
+  @@index([senderId], name: "messages_sender_id_index")
+  @@map("messages")
+}
+
+model ParticipantState {
+  accountId Int      @id @map("account_id")
+  state     String?
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @default(now()) @map("updated_at")
+
+  account Account @relation(fields: [accountId], references: [id])
+
+  @@map("participant_states")
+}
+
+model Participant {
+  id             Int       @id @default(autoincrement())
+  accountId      Int?      @map("account_id")
+  roomId         Int?      @map("room_id")
+  ip             String?
+  browser        String?
+  device         String?
+  vendor         String?
+  engine         String?
+  os             String?
+  osVersion      String?   @map("os_version")
+  engineVersion  String?   @map("engine_version")
+  browserVersion String?   @map("browser_version")
+  userAgent      String?   @map("user_agent")
+  createdAt      DateTime  @default(now()) @map("created_at")
+  updatedAt      DateTime? @map("updated_at")
+
+  account              Account?               @relation(fields: [accountId], references: [id])
+  room                 Room?                  @relation(fields: [roomId], references: [id])
+  analyticsRoomUsage   AnalyticsRoomUsage[]
+  analyticsMicUsage    AnalyticsMicUsage[]
+  analyticsCameraUsage AnalyticsCameraUsage[]
+
+  @@index([accountId], name: "participants_account_id_index")
+  @@index([browser], name: "participants_browser_index")
+  @@index([device], name: "participants_device_index")
+  @@index([engine], name: "participants_engine_index")
+  @@index([ip], name: "participants_ip_index")
+  @@index([os], name: "participants_os_index")
+  @@index([roomId], name: "participants_room_id_index")
+  @@index([vendor], name: "participants_vendor_index")
+  @@map("participants")
+}
+
+model RoomMembership {
+  id        Int       @id @default(autoincrement())
+  roomId    Int       @map("room_id")
+  accountId Int       @map("account_id")
+  beganAt   DateTime? @map("began_at")
+  expiresAt DateTime? @map("expires_at")
+  revokedAt DateTime? @map("revoked_at")
+  createdAt DateTime  @default(now()) @map("created_at")
+  updatedAt DateTime  @default(now()) @map("updated_at")
+
+  account Account @relation(fields: [accountId], references: [id])
+  room    Room    @relation(fields: [roomId], references: [id])
+
+  @@index([accountId], name: "room_memberships_account_id_index")
+  @@index([roomId], name: "room_memberships_room_id_index")
+  @@map("room_memberships")
+}
+
+model ParticipantTransform {
+  roomId    Int      @map("room_id")
+  accountId Int      @map("account_id")
+  state     String?
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @default(now()) @map("updated_at")
+
+  room    Room    @relation(fields: [roomId], references: [id])
+  account Account @relation(fields: [accountId], references: [id])
+
+  @@id([roomId, accountId])
+  @@map("room_participant_states")
+}
+
+model RoomRoute {
+  id            Int      @id @default(autoincrement())
+  roomId        Int      @map("room_id")
+  route         String   @unique
+  priorityLevel Int      @default(0) @map("priority_level")
+  isVanity      Boolean? @map("is_vanity")
+  createdAt     DateTime @default(now()) @map("created_at")
+  updatedAt     DateTime @default(now()) @map("updated_at")
+
+  room Room @relation(fields: [roomId], references: [id])
+
+  @@index([roomId, priorityLevel], name: "room_routes_room_id_priority_level_index")
+  @@index([route], name: "room_routes_route_index")
+  @@map("room_routes")
+}
+
+model RoomState {
+  roomId      Int      @id @map("room_id")
+  state       String?
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @default(now()) @map("updated_at")
+  wallpaperId Int?     @map("wallpaper_id")
+
+  room      Room       @relation(fields: [roomId], references: [id])
+  wallpaper Wallpaper? @relation(fields: [wallpaperId], references: [id])
+
+  @@map("room_states")
+}
+
+model RoomTemplate {
+  id        Int      @id @default(autoincrement())
+  creatorId Int?     @map("creator_id")
+  name      String   @unique
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @default(now()) @map("updated_at")
+  data      String?
+
+  creator Account? @relation(fields: [creatorId], references: [id])
+
+  @@index([creatorId], name: "room_templates_creator_id_index")
+  @@index([name], name: "room_templates_name_index")
+  @@map("room_templates")
+}
+
+model WidgetTransform {
+  roomId    Int      @map("room_id")
+  widgetId  Int      @unique @map("widget_id")
+  state     String?
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @default(now()) @map("updated_at")
+
+  room   Room   @relation(fields: [roomId], references: [id])
+  widget Widget @relation(fields: [widgetId], references: [id])
+
+  @@id([roomId, widgetId])
+  @@map("room_widget_states")
+}
+
+model RoomWidget {
+  widgetId  Int      @unique @map("widget_id")
+  roomId    Int      @map("room_id")
+  createdAt DateTime @default(now()) @map("created_at")
+
+  widget Widget? @relation(fields: [widgetId], references: [id])
+  room   Room?   @relation(fields: [roomId], references: [id])
+
+  @@id([widgetId, roomId])
+  @@index([roomId], name: "room_widgets_room_id_index")
+  @@index([widgetId], name: "room_widgets_widget_id_index")
+  @@map("room_widgets")
+}
+
+model Room {
+  id           Int       @id @default(autoincrement())
+  creatorId    Int?      @map("creator_id")
+  urlId        String?   @unique @map("url_id")
+  isPublic     Boolean?  @default(true) @map("is_public")
+  displayName  String?   @map("display_name")
+  templateName String?   @map("template_name")
+  deletedAt    DateTime? @map("deleted_at")
+  createdAt    DateTime  @default(now()) @map("created_at")
+  updatedAt    DateTime  @default(now()) @map("updated_at")
+
+  creator                       Account?                        @relation(fields: [creatorId], references: [id])
+  widgets                       RoomWidget[]
+  analyticsCameraUsage          AnalyticsCameraUsage[]
+  analyticsMicUsage             AnalyticsMicUsage[]
+  analyticsRoomParticipantCount AnalyticsRoomParticipantCount[]
+  analyticsRoomUsage            AnalyticsRoomUsage[]
+  experienceRatings             ExperienceRating[]
+  participants                  Participant[]
+  memberships                   RoomMembership[]
+  participantStates             ParticipantTransform[]
+  routes                        RoomRoute[]
+  state                         RoomState?
+  widgetStates                  WidgetTransform[]
+
+  @@index([creatorId], name: "rooms_creator_id_index")
+  @@index([deletedAt], name: "rooms_deleted_at_index")
+  @@index([templateName], name: "rooms_template_name_index")
+  @@index([urlId], name: "rooms_url_id_index")
+  @@map("rooms")
+}
+
+model Space {
+  id        Int       @id @default(autoincrement())
+  accountId Int       @map("account_id")
+  secret    String?
+  expiresAt DateTime? @map("expires_at")
+  revokedAt DateTime? @map("revoked_at")
+  createdAt DateTime  @default(now()) @map("created_at")
+
+  account           Account?           @relation(fields: [accountId], references: [id])
+  experienceRatings ExperienceRating[]
+  accountEvents     AccountEvent[]
+
+  @@index([accountId], name: "sessions_account_id_index")
+  @@index([expiresAt], name: "sessions_expires_at_index")
+  @@index([revokedAt], name: "sessions_revoked_at_index")
+  @@index([secret], name: "sessions_secret_index")
+  @@map("sessions")
+}
+
+model SlackAction {
+  id          Int      @id @default(autoincrement())
+  accountId   Int?     @map("account_id")
+  action      String?
+  slackUserId String?  @map("slack_user_id")
+  channelId   String?  @map("channel_id")
+  createdAt   DateTime @default(now()) @map("created_at")
+
+  account Account? @relation(fields: [accountId], references: [id])
+
+  @@index([accountId], name: "slack_actions_account_id_index")
+  @@map("slack_actions")
+}
+
+model SlackInstall {
+  id            Int       @id @default(autoincrement())
+  accountId     Int?      @map("account_id")
+  workspaceId   String?   @map("workspace_id")
+  enterpriseId  String?   @map("enterprise_id")
+  slackUserId   String?   @map("slack_user_id")
+  installData   String?   @map("install_data")
+  createdAt     DateTime  @default(now()) @map("created_at")
+  uninstalledAt DateTime? @map("uninstalled_at")
+
+  account Account? @relation(fields: [accountId], references: [id])
+
+  @@index([accountId], name: "slack_installs_account_id_index")
+  @@index([enterpriseId], name: "slack_installs_enterprise_id_index")
+  @@index([workspaceId], name: "slack_installs_workspace_id_index")
+  @@map("slack_installs")
+}
+
+model Wallpaper {
+  id            Int      @id @default(autoincrement())
+  creatorId     Int?     @map("creator_id")
+  name          String?
+  url           String   @unique
+  mimetype      String?
+  category      String?
+  artistName    String?  @map("artist_name")
+  thumbnailUrl  String?  @map("thumbnail_url")
+  dominantColor String?  @map("dominant_color")
+  createdAt     DateTime @default(now()) @map("created_at")
+  updatedAt     DateTime @default(now()) @map("updated_at")
+
+  creator         Account?    @relation(fields: [creatorId], references: [id])
+  roomStateUsages RoomState[]
+
+  @@index([creatorId], name: "wallpapers_creator_id_index")
+  @@index([url], name: "wallpapers_url_index")
+  @@map("wallpapers")
+}
+
+model WidgetState {
+  widgetId  Int      @id @map("widget_id")
+  state     String?
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @default(now()) @map("updated_at")
+
+  widget Widget @relation(fields: [widgetId], references: [id])
+
+  @@map("widget_states")
+}
+
+model Widget {
+  id         Int       @id @default(autoincrement())
+  creatorId  Int?      @map("creator_id")
+  type       String?   @map("_type")
+  deletedAt  DateTime? @map("deleted_at")
+  deletedBy  Int?      @map("deleted_by")
+  archivedAt DateTime? @map("archived_at")
+  createdAt  DateTime  @default(now()) @map("created_at")
+  updatedAt  DateTime  @default(now()) @map("updated_at")
+
+  creator     Account?         @relation(fields: [creatorId], references: [id])
+  widgetState WidgetState?
+  transform   WidgetTransform?
+  roomWidget  RoomWidget?
+  messages    Message[]
+
+  @@index([type], name: "widgets__type_index")
+  @@index([archivedAt], name: "widgets_archived_at_index")
+  @@index([creatorId], name: "widgets_creator_id_index")
+  @@index([deletedAt], name: "widgets_deleted_at_index")
+  @@map("widgets")
+}
+
+model SurveyResponse {
+  id         String   @id @default(cuid())
+  accountId  Int?     @map("account_id")
+  surveyName String?  @map("survey_name")
+  response   String?
+  createdAt  DateTime @default(now()) @map("created_at")
+  updatedAt  DateTime @updatedAt @map("updated_at")
+
+  account Account? @relation(fields: [accountId], references: [id])
+
+  @@map("survey_responses")
+}
+
+model FileUpload {
+  id            String   @id @default(cuid())
+  creatorId     Int?     @map("account_id")
+  url           String
+  name          String
+  mimetype      String
+  thumbnailUrl  String?  @map("thumbnail_url")
+  dominantColor String?  @map("dominant_color")
+  createdAt     DateTime @default(now()) @map("created_at")
+
+  @@map("file_uploads")
+}
+
 model TalentApplication {
   id        Int      @id @default(autoincrement())
   createdAt DateTime @default(now())
@@ -330,6 +879,8 @@ enum PrefersReducedMotion {
 enum UserRole {
   SUDO
   USER
+  OWNER
+  ADMIN
 }
 
 enum MfaMethod {

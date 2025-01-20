@@ -1,39 +1,26 @@
 import { NestFactory } from '@nestjs/core';
-import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
-import { promises } from 'fs';
-import helmet from 'helmet';
 import { AppModule } from './app.module';
-import { Logger, ValidationPipe } from '@nestjs/common';
-import { join } from 'path';
+import { CustomServer } from './server/custom-server';
 
 
 async function bootstrap() {
-  const logger = new Logger('EntryPoint');
   const app = await NestFactory.create(AppModule, {
     logger: ['error', 'warn', 'debug', 'log', 'verbose'],
+    cors:true,
   });
-  app.useGlobalPipes(new ValidationPipe());
-  app.use(helmet());
-  app.enableCors();
-  app.setGlobalPrefix('v1');
-  const pkg = JSON.parse(
-    await promises.readFile(join('.', 'package.json'), 'utf8'),
-  );
+  
+ 
+  const server = new CustomServer({
+    port: 3000,
+    sslConfig: process.env.NODE_ENV === 'production' ? {
+      privateKeyPath: process.env.SSL_PRIVATE_KEY_PATH,
+      certificatePath: process.env.SSL_CERTIFICATE_PATH
+    } : undefined
+  });
 
-  //app.useGlobalFilters(new AllExceptionsFilter());
-
-  const config = new DocumentBuilder()
-    .setTitle('API')
-    .setDescription('Api Description')
-    .setVersion(pkg.version)
-    .build();
-
-  const document = SwaggerModule.createDocument(app, config);
-  SwaggerModule.setup('docs', app, document);
-
-  const PORT = process.env.PORT ?? 5000;
-
-  await app.listen(PORT);
-  logger.log(`Server running on http://localhost:${PORT}`);
+  await server.initialize(app);
+  await app.init();
+  await server.listen();
 }
+
 bootstrap();

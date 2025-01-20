@@ -4,6 +4,8 @@ import geolite2 from 'geolite2-redist';
 import maxmind, { CityResponse, Reader } from 'maxmind';
 import QuickLRU = require('quick-lru');
 
+// https://stackoverflow.com/questions/74830166/unable-to-import-esm-module-in-nestjs
+
 @Injectable()
 export class GeolocationService implements OnModuleDestroy {
   constructor(private configService: ConfigService) {}

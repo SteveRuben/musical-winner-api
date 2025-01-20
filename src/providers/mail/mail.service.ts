@@ -79,11 +79,6 @@ export class MailService {
       )
       .then(() => {})
       .catch(() => {}); 
-       /*this.sendMail({
-        ...options,
-        from:
-          options.from ?? `"${this.config.name}" <${this.config.from}>`,
-      });*/
   }
 
   private async sendMail(options: Mail.Options & MailOptions) {
@@ -112,25 +107,6 @@ export class MailService {
     }
     return this.transport.sendMail(options);
   }
-
-  /* async readTemplate(key: string) {
-    const cached = this.templateCache.get<string>(key);
-    if (cached) return cached;
-    
-    const result = await this.readTemplateUnmemoized(key);
-    this.templateCache.set(key, result);
-    return result;
-  } */
-
-  /*  async readTemplate(key: string) {
-    if (this.templateCache.has(key)) {
-      return this.templateCache.get(key);
-    }
-    
-    const result = await this.readTemplateUnmemoized(key);
-    this.templateCache.set(key, result);
-    return result;
-  } */
 
   private async readTemplateUnmemoized(name: string) {
     if (!name.endsWith('.html')) name = `${name}.md`;

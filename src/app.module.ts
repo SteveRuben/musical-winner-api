@@ -26,27 +26,46 @@ import { MembershipsModule } from '@/modules/memberships/memberships.module';
 import { MailModule } from '@/providers/mail/mail.module';
 import { S3Module } from '@/providers/s3/s3.module';
 import { TalentModule } from '@modules/talents/talent.module';
+import serverConfig from './config/server.config';
+import { DomainsModule } from '@/modules/domains/domains.module';
+import { DnsModule } from '@/providers/dns/dns.module';
+import { UsersModule } from '@/modules/users/users.module';
+import { SessionsModule } from '@/modules/sessions/sessions.module';
+import { GroupsModule } from '@/modules/groups/groups.module';
+import { EmailsModule } from '@/modules/emails/emails.module';
+import { MultiFactorAuthenticationModule } from '@/modules/multi-factor-authentication/multi-factor-authentication.module';
+import { TasksModule } from '@/providers/tasks/tasks.module';
+import { ScheduleModule } from '@nestjs/schedule';
+import { MeetingsModule } from '@/modules/meetings/meetings.module';
+import { EventEmitterModule } from '@nestjs/event-emitter';
+import { TemplatesModule } from '@/modules/templates/templates.module';
+import { WallpapersModule } from '@/modules/wallpapers/wallpapers.module';
+import { ExperienceRatingsModule } from '@/modules/experience-ratings/experience-ratings.module';
+import { SurveysModule } from '@/modules/surveys/surveys.module';
+import { SharedModule } from '@/providers/shared/shared.module';
 
 @Module({
   imports: [
     ConfigModule.forRoot({
       isGlobal: true,
       cache: true,
-      load: [configuration],
+      load: [configuration,serverConfig],
     }),
+    ScheduleModule.forRoot(),
+    EventEmitterModule.forRoot(),
     PrismaModule,
-    /* TasksModule,
-    UsersModule, */
+    TasksModule,
+    UsersModule,
     AuthModule,
     MailModule,
-    /* SessionsModule,
+    SessionsModule,
     EmailsModule,
     GroupsModule,
-    MultiFactorAuthenticationModule, */
+    MultiFactorAuthenticationModule,
     ApiKeysModule,
     ApprovedSubnetsModule,
-    /*  DomainsModule,
-    DnsModule, */
+    DomainsModule,
+    DnsModule,
     GeolocationModule,
     MembershipsModule,
     StripeModule,
@@ -55,8 +74,14 @@ import { TalentModule } from '@modules/talents/talent.module';
     ElasticSearchModule,
     /* SlackModule,
     AirtableModule, */
+    ExperienceRatingsModule,
+    SurveysModule,
+    SharedModule,
     S3Module,
+    MeetingsModule,
+    TemplatesModule,
     TalentModule,
+    WallpapersModule,
     /*   CloudinaryModule,
     FirebaseModule,
     GitHubModule,
