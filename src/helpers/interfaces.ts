@@ -3,6 +3,6 @@ export type Files = {
   originalname: string;
   encoding: '7bit';
   mimetype: string;
-  buffer: Buffer;
+  buffer: Buffer; // eslint-disable-line
   size: number;
 }[];

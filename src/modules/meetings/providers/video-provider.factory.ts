@@ -1,8 +1,10 @@
 import { Injectable } from '@nestjs/common';
-import { MeetingsConfigService } from '../meetings-config.service';
-import { TwilioService } from '@/providers/twilio/twilio.service';
-import { LiveKitService } from '@/providers/livekit/livekit.service';
+
 import { VideoProvider } from '@/providers/interfaces/video-provider.interface';
+import { LiveKitService } from '@/providers/livekit/livekit.service';
+import { TwilioService } from '@/providers/twilio/twilio.service';
+
+import { MeetingsConfigService } from '../meetings-config.service';
 
 @Injectable()
 export class VideoProviderFactory {
@@ -13,8 +15,8 @@ export class VideoProviderFactory {
   ) {}
 
   getProvider(): VideoProvider {
-    return this.config.provider === 'twilio' 
-      ? this.twilioProvider 
+    return this.config.provider === 'twilio'
+      ? this.twilioProvider
       : this.livekitProvider;
   }
 }

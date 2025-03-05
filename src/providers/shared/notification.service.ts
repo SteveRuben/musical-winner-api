@@ -2,7 +2,11 @@ import { Injectable } from '@nestjs/common';
 
 @Injectable()
 export class NotificationService {
-  async notifyExperienceRating(rating: any, accountId: number, isUpdate: boolean) {
+  async notifyExperienceRating(
+    rating: any,
+    accountId: number,
+    isUpdate: boolean,
+  ) {
     // Implémentez la logique de notification
   }
 

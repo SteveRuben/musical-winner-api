@@ -1,3 +1,4 @@
+import { Scopes } from '@modules/auth/scope.decorator';
 import {
   BadRequestException,
   Body,
@@ -8,14 +9,15 @@ import {
   Post,
 } from '@nestjs/common';
 import { User } from '@prisma/client';
-import { Scopes } from '@modules/auth/scope.decorator';
+
+import { MFA_PHONE_OR_TOKEN_REQUIRED } from '@/errors/errors.constants';
+import { Expose } from '@/prisma/prisma.interface';
+
 import {
   EnableSmsMfaDto,
   EnableTotpMfaDto,
 } from './multi-factor-authentication.dto';
 import { MultiFactorAuthenticationService } from './multi-factor-authentication.service';
-import { Expose } from '@/prisma/prisma.interface';
-import { MFA_PHONE_OR_TOKEN_REQUIRED } from '@/errors/errors.constants';
 
 @Controller('users/:userId/multi-factor-authentication')
 export class MultiFactorAuthenticationController {

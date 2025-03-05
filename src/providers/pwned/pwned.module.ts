@@ -1,4 +1,5 @@
 import { Module } from '@nestjs/common';
+
 import { PwnedService } from './pwned.service';
 
 @Module({

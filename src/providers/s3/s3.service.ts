@@ -1,6 +1,7 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { AWSError, S3 } from 'aws-sdk';
+
 import { Configuration } from '../../config/configuration.interface';
 
 @Injectable()

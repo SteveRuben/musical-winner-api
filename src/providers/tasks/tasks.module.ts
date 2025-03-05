@@ -1,11 +1,13 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
+
 import { DomainsModule } from '@/modules/domains/domains.module';
+import { MetricsModule } from '@/modules/metrics/metrics.module';
+import { UsersModule } from '@/modules/users/users.module';
+import { PrismaModule } from '@/prisma/prisma.module';
+
 import { ElasticSearchModule } from '../elasticsearch/elasticsearch.module';
 import { TasksService } from './tasks.service';
-import { UsersModule } from '@/modules/users/users.module';
-import { MetricsModule } from '@/modules/metrics/metrics.module';
-import { PrismaModule } from '@/prisma/prisma.module';
 
 @Module({
   imports: [

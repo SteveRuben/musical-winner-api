@@ -1,3 +1,5 @@
+import { AuditLog } from '@modules/audit-logs/audit-log.decorator';
+import { Scopes } from '@modules/auth/scope.decorator';
 import {
   Body,
   Controller,
@@ -10,19 +12,18 @@ import {
 } from '@nestjs/common';
 import { Domain } from '@prisma/client';
 
+import { CursorPipe } from '@/pipes/cursor.pipe';
+import { OptionalIntPipe } from '@/pipes/optional-int.pipe';
+import { OrderByPipe } from '@/pipes/order-by.pipe';
+import { WherePipe } from '@/pipes/where.pipe';
+import { Expose } from '@/prisma/prisma.interface';
+
 import {
   DOMAIN_VERIFICATION_HTML,
   DOMAIN_VERIFICATION_TXT,
 } from './domains.constants';
 import { CreateDomainDto } from './domains.dto';
 import { DomainsService } from './domains.service';
-import { Scopes } from '@modules/auth/scope.decorator';
-import { AuditLog } from '@modules/audit-logs/audit-log.decorator';
-import { Expose } from '@/prisma/prisma.interface';
-import { OptionalIntPipe } from '@/pipes/optional-int.pipe';
-import { CursorPipe } from '@/pipes/cursor.pipe';
-import { WherePipe } from '@/pipes/where.pipe';
-import { OrderByPipe } from '@/pipes/order-by.pipe';
 
 @Controller('groups/:groupId/domains')
 export class DomainController {

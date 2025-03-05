@@ -3,11 +3,12 @@ import { ConfigService } from '@nestjs/config';
 import PQueue from 'p-queue';
 import pRetry from 'p-retry';
 import { Twilio } from 'twilio';
+import AccessToken, { VideoGrant } from 'twilio/lib/jwt/AccessToken';
 import { MessageListInstanceCreateOptions } from 'twilio/lib/rest/api/v2010/account/message';
-import { VideoProvider } from '../interfaces/video-provider.interface';
 /* import TwilioClient from 'twilio/lib/rest/Twilio'; */
 import { v4 as uuidv4 } from 'uuid';
-import AccessToken, { VideoGrant } from 'twilio/lib/jwt/AccessToken';
+
+import { VideoProvider } from '../interfaces/video-provider.interface';
 
 @Injectable()
 export class TwilioService implements VideoProvider {
@@ -32,7 +33,7 @@ export class TwilioService implements VideoProvider {
   }
 
   send(options: MessageListInstanceCreateOptions) {
-   this.queue
+    this.queue
       .add(() =>
         pRetry(() => this.sendSms(options), {
           retries: this.configService.get<number>('sms.retries') ?? 3,
@@ -62,21 +63,17 @@ export class TwilioService implements VideoProvider {
 
   generateToken(roomId: string, accountId: string): string {
     const userUuid = uuidv4();
-    
+
     const { accountSid, apiKeySid, apiKeySecret } = this.twilioConfig;
-    
-    const token = new AccessToken(
-      accountSid,
-      apiKeySid,
-      apiKeySecret,
-      { ttl: this.MAX_ALLOWED_SESSION_SECONDS,
-        identity: accountId
-       }
-    );
+
+    const token = new AccessToken(accountSid, apiKeySid, apiKeySecret, {
+      ttl: this.MAX_ALLOWED_SESSION_SECONDS,
+      identity: accountId,
+    });
 
     token.identity = `${accountId}#!${userUuid}`;
     const videoGrant = new VideoGrant({
-      room: `${process.env.NODE_ENV}_${roomId}`
+      room: `${process.env.NODE_ENV}_${roomId}`, // eslint-disable-line
     });
     token.addGrant(videoGrant);
 

@@ -1,3 +1,5 @@
+import { UserRequest } from '@modules/auth/auth.interface';
+import { Scopes } from '@modules/auth/scope.decorator';
 import {
   Controller,
   Delete,
@@ -8,14 +10,14 @@ import {
   Req,
 } from '@nestjs/common';
 import { Session } from '@prisma/client';
+
 import { CursorPipe } from '@/pipes/cursor.pipe';
 import { OptionalIntPipe } from '@/pipes/optional-int.pipe';
 import { OrderByPipe } from '@/pipes/order-by.pipe';
 import { WherePipe } from '@/pipes/where.pipe';
-import { UserRequest } from '@modules/auth/auth.interface';
-import { Scopes } from '@modules/auth/scope.decorator';
-import { SessionsService } from './sessions.service';
 import { Expose } from '@/prisma/prisma.interface';
+
+import { SessionsService } from './sessions.service';
 
 @Controller('users/:userId/sessions')
 export class SessionController {

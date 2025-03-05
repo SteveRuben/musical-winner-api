@@ -1,3 +1,4 @@
+import { AuthService } from '@modules/auth/auth.service';
 import {
   BadRequestException,
   ConflictException,
@@ -8,11 +9,7 @@ import { ConfigService } from '@nestjs/config';
 import type { MfaMethod } from '@prisma/client';
 import { User } from '@prisma/client';
 import { hash } from 'bcrypt';
-import { MailService } from '@/providers/mail/mail.service';
-import { TokensService } from '@/providers/tokens/tokens.service';
-import { TwilioService } from '@/providers/twilio/twilio.service';
-import { AuthService } from '@modules/auth/auth.service';
-import { PrismaService } from '@/prisma/prisma.service';
+
 import {
   MFA_ENABLED_CONFLICT,
   MFA_NOT_ENABLED,
@@ -20,6 +17,10 @@ import {
   USER_NOT_FOUND,
 } from '@/errors/errors.constants';
 import { Expose } from '@/prisma/prisma.interface';
+import { PrismaService } from '@/prisma/prisma.service';
+import { MailService } from '@/providers/mail/mail.service';
+import { TokensService } from '@/providers/tokens/tokens.service';
+import { TwilioService } from '@/providers/twilio/twilio.service';
 
 @Injectable()
 export class MultiFactorAuthenticationService {

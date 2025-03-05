@@ -1,3 +1,3 @@
 export interface VideoProvider {
-    generateToken(roomId: string, accountId: string): string;
+  generateToken(roomId: string, accountId: string): string;
 }

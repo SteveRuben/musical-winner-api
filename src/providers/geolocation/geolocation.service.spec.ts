@@ -1,4 +1,5 @@
 import { ConfigService } from '@nestjs/config';
+
 import { GeolocationService } from './geolocation.service';
 
 const geolocationService = new GeolocationService(new ConfigService());

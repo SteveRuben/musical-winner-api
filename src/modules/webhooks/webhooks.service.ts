@@ -7,17 +7,16 @@ import {
 import { ConfigService } from '@nestjs/config';
 import type { Prisma } from '@prisma/client';
 import { Webhook } from '@prisma/client';
+import axios from 'axios';
+import PQueue from 'p-queue';
 import pRetry from 'p-retry';
+
 import {
   UNAUTHORIZED_RESOURCE,
   WEBHOOK_NOT_FOUND,
 } from '@/errors/errors.constants';
-import { PrismaService } from '@/prisma/prisma.service';
 import { Expose } from '@/prisma/prisma.interface';
-import PQueue from 'p-queue';
-import axios from 'axios';
-
-
+import { PrismaService } from '@/prisma/prisma.service';
 
 @Injectable()
 export class WebhooksService {
@@ -179,7 +178,7 @@ export class WebhooksService {
               }),
             )
             .then(() => {})
-            .catch(() => {}), 
+            .catch(() => {}),
         );
       })
       .catch((error) => this.logger.error('Unable to get webhooks', error));

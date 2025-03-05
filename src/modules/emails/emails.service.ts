@@ -1,4 +1,5 @@
-import { PrismaService } from '@/prisma/prisma.service';
+import { AuthService } from '@modules/auth/auth.service';
+import { UsersService } from '@modules/users/users.service';
 import {
   BadRequestException,
   Injectable,
@@ -7,16 +8,16 @@ import {
 } from '@nestjs/common';
 import type { Prisma } from '@prisma/client';
 import { Email } from '@prisma/client';
-import { UsersService } from '@modules/users/users.service';
-import { AuthService } from '@modules/auth/auth.service';
-import { safeEmail } from '@/helpers/safe-email';
-import { Expose } from '@/prisma/prisma.interface';
+
 import {
   EMAIL_DELETE_PRIMARY,
   EMAIL_NOT_FOUND,
   UNAUTHORIZED_RESOURCE,
   USER_NOT_FOUND,
 } from '@/errors/errors.constants';
+import { safeEmail } from '@/helpers/safe-email';
+import { Expose } from '@/prisma/prisma.interface';
+import { PrismaService } from '@/prisma/prisma.service';
 
 @Injectable()
 export class EmailsService {

@@ -1,8 +1,8 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { EventEmitter2 } from '@nestjs/event-emitter';
-import { RoomRepository } from './repositories/room.repository';
 import { Room } from '@prisma/client';
 
+import { RoomRepository } from './repositories/room.repository';
 
 interface RoomState {
   // Définissez ici les propriétés de l'état de la room
@@ -30,7 +30,10 @@ export class RoomService {
     try {
       return await this.roomRepository.findByRoute(roomRoute);
     } catch (error) {
-      this.logger.error(`Error finding room by route: ${roomRoute}`, error.stack);
+      this.logger.error(
+        `Error finding room by route: ${roomRoute}`,
+        error.stack,
+      );
       return null;
     }
   }
@@ -46,7 +49,7 @@ export class RoomService {
       const { room, state } = await this.roomRepository.createFromTemplate(
         templateName,
         template,
-        accountId
+        accountId,
       );
 
       // Émettre l'événement de création
@@ -64,7 +67,7 @@ export class RoomService {
     } catch (error) {
       this.logger.error(
         `Error creating room from template: ${templateName}`,
-        error.stack
+        error.stack,
       );
       throw error;
     }
@@ -77,7 +80,7 @@ export class RoomService {
     } catch (error) {
       this.logger.error(
         `Error revoking membership for actor ${actorId} in room ${roomId}`,
-        error.stack
+        error.stack,
       );
       throw error;
     }

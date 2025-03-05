@@ -9,6 +9,7 @@ import type { Prisma, UserRole } from '@prisma/client';
 import { User } from '@prisma/client';
 import { compare } from 'bcrypt';
 import { extname } from 'path';
+
 import {
   CURRENT_PASSWORD_REQUIRED,
   FILE_TOO_LARGE,
@@ -17,15 +18,16 @@ import {
 } from '@/errors/errors.constants';
 import { Files } from '@/helpers/interfaces';
 import { safeEmail } from '@/helpers/safe-email';
+import { Expose } from '@/prisma/prisma.interface';
+import { PrismaService } from '@/prisma/prisma.service';
 import { MailService } from '@/providers/mail/mail.service';
 import { S3Service } from '@/providers/s3/s3.service';
 import { MERGE_ACCOUNTS_TOKEN } from '@/providers/tokens/tokens.constants';
 import { TokensService } from '@/providers/tokens/tokens.service';
+
 import { ApiKeysService } from '../api-keys/api-keys.service';
 import { AuthService } from '../auth/auth.service';
 import { PasswordUpdateInput } from './users.interface';
-import { PrismaService } from '@/prisma/prisma.service';
-import { Expose } from '@/prisma/prisma.interface';
 
 @Injectable()
 export class UsersService {

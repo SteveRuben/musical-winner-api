@@ -1,8 +1,9 @@
-import { PrismaService } from '@/prisma/prisma.service';
 import { Injectable } from '@nestjs/common';
-import { NotificationService } from '@/providers/shared/notification.service';
-import { CreateSurveyResponseDto } from './dto';
 
+import { PrismaService } from '@/prisma/prisma.service';
+import { NotificationService } from '@/providers/shared/notification.service';
+
+import { CreateSurveyResponseDto } from './dto';
 
 @Injectable()
 export class SurveysService {
@@ -11,7 +12,10 @@ export class SurveysService {
     private readonly notificationService: NotificationService,
   ) {}
 
-  async respondToSurvey(accountId: number, createResponseDto: CreateSurveyResponseDto) {
+  async respondToSurvey(
+    accountId: number,
+    createResponseDto: CreateSurveyResponseDto,
+  ) {
     const existingResponse = await this.prisma.surveyResponse.findFirst({
       where: {
         accountId,

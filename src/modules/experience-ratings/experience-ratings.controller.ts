@@ -1,6 +1,14 @@
-import { Controller, Post, Body, Req, Param, ParseIntPipe } from '@nestjs/common';
-import { ExperienceRatingsService } from './experience-ratings.service';
+import {
+  Body,
+  Controller,
+  Param,
+  ParseIntPipe,
+  Post,
+  Req,
+} from '@nestjs/common';
+
 import { CreateExperienceRatingDto, UpdateExperienceRatingDto } from './dto';
+import { ExperienceRatingsService } from './experience-ratings.service';
 
 @Controller('experience-ratings')
 export class ExperienceRatingsController {

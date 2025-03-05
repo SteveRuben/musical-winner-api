@@ -1,14 +1,4 @@
 import {
-  API_KEY_NOT_FOUND,
-  UNAUTHORIZED_RESOURCE,
-  USER_NOT_FOUND,
-} from '@/errors/errors.constants';
-import { groupOwnerScopes, userScopes } from '@/helpers/scopes';
-import { Expose } from '@/prisma/prisma.interface';
-import { PrismaService } from '@/prisma/prisma.service';
-//import { ElasticSearchService } from '@/providers/elasticsearch/elasticsearch.service';
-import { TokensService } from '@/providers/tokens/tokens.service';
-import {
   Injectable,
   Logger,
   NotFoundException,
@@ -18,19 +8,29 @@ import { ConfigService } from '@nestjs/config';
 import type { Prisma } from '@prisma/client';
 import { ApiKey } from '@prisma/client';
 
+import {
+  API_KEY_NOT_FOUND,
+  UNAUTHORIZED_RESOURCE,
+  USER_NOT_FOUND,
+} from '@/errors/errors.constants';
+import { groupOwnerScopes, userScopes } from '@/helpers/scopes';
+import { Expose } from '@/prisma/prisma.interface';
+import { PrismaService } from '@/prisma/prisma.service';
+//import { ElasticSearchService } from '@/providers/elasticsearch/elasticsearch.service';
+import { TokensService } from '@/providers/tokens/tokens.service';
 
 /* const dynamicImport = async (packageName: string) =>
   new Function(`return import('${packageName}')`)(); */
-async function dynamicImport(packageName: string){
+async function dynamicImport(packageName: string) {
   return new Function(`return import('${packageName}')`)();
 }
 
 @Injectable()
 export class ApiKeysService {
   private readonly logger = new Logger(ApiKeysService.name);
-   private oldlru = ( dynamicImport('quick-lru'));//.default; 
-   private lru = this.oldlru;
-/*    new QuickLRU<string, ApiKey>({
+  private oldlru = dynamicImport('quick-lru'); //.default;
+  private lru = this.oldlru;
+  /*    new QuickLRU<string, ApiKey>({
     maxSize: this.configService.get<number>('caching.apiKeyLruSize') ?? 100,
   });  */
 
@@ -39,9 +39,7 @@ export class ApiKeysService {
     private tokensService: TokensService,
     private configService: ConfigService,
     //private elasticSearchService: ElasticSearchService,
-  ) {
-    
-  }
+  ) {}
 
   async createApiKeyForGroup(
     groupId: number,

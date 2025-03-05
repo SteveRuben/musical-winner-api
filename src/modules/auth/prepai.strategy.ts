@@ -1,3 +1,4 @@
+import { ApiKeysService } from '@modules/api-keys/api-keys.service';
 import { Injectable } from '@nestjs/common';
 import { PassportStrategy } from '@nestjs/passport';
 import { Request } from 'express';
@@ -6,10 +7,10 @@ import minimatch from 'minimatch';
 import { Strategy } from 'passport-strategy';
 import { getClientIp } from 'request-ip';
 
-import { AccessTokenClaims, AccessTokenParsed } from './auth.interface';
-import { ApiKeysService } from '@modules/api-keys/api-keys.service';
-import { TokensService } from '@/providers/tokens/tokens.service';
 import { LOGIN_ACCESS_TOKEN } from '@/providers/tokens/tokens.constants';
+import { TokensService } from '@/providers/tokens/tokens.service';
+
+import { AccessTokenClaims, AccessTokenParsed } from './auth.interface';
 
 class PrepaiStrategyName extends Strategy {
   name = 'prepai';

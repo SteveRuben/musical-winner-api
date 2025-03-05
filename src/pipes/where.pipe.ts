@@ -1,4 +1,5 @@
 import { BadRequestException, Injectable, PipeTransform } from '@nestjs/common';
+
 import { WHERE_PIPE_FORMAT } from '@/errors/errors.constants';
 import { parseObjectLiteral } from '@/helpers/parse-object-literal';
 

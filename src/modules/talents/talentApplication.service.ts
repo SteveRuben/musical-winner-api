@@ -1,7 +1,8 @@
-import { PrismaService } from '@/prisma/prisma.service';
-import { MailService } from '@/providers/mail/mail.service';
 import { Injectable } from '@nestjs/common';
 import { ExperienceLevel, ExpertiseArea, Prisma } from '@prisma/client';
+
+import { PrismaService } from '@/prisma/prisma.service';
+import { MailService } from '@/providers/mail/mail.service';
 
 @Injectable()
 export class TalentApplicationService {

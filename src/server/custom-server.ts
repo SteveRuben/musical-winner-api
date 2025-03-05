@@ -1,12 +1,12 @@
 // src/server/custom-server.ts
 import { INestApplication, Logger, ValidationPipe } from '@nestjs/common';
 import { HttpAdapterHost } from '@nestjs/core';
-import * as https from 'https';
-import * as http from 'http';
+import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import * as fs from 'fs';
-import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 import { promises } from 'fs';
 import helmet from 'helmet';
+import * as http from 'http';
+import * as https from 'https';
 import { join } from 'path';
 
 interface ServerConfig {
@@ -32,10 +32,18 @@ export class CustomServer {
     }
 
     try {
-      const privateKey = fs.readFileSync(this.config.sslConfig.privateKeyPath, 'utf8');
-      const certificate = fs.readFileSync(this.config.sslConfig.certificatePath, 'utf8');
-      
-      this.logger.log(`Loaded SSL certificate from ${this.config.sslConfig.certificatePath}`);
+      const privateKey = fs.readFileSync(
+        this.config.sslConfig.privateKeyPath,
+        'utf8',
+      );
+      const certificate = fs.readFileSync(
+        this.config.sslConfig.certificatePath,
+        'utf8',
+      );
+
+      this.logger.log(
+        `Loaded SSL certificate from ${this.config.sslConfig.certificatePath}`,
+      );
       return { key: privateKey, cert: certificate };
     } catch (error) {
       this.logger.error('Failed to load SSL credentials:', error);
@@ -55,15 +63,15 @@ export class CustomServer {
     const pkg = JSON.parse(
       await promises.readFile(join('.', 'package.json'), 'utf8'),
     );
-  
+
     //app.useGlobalFilters(new AllExceptionsFilter());
-  
+
     const config = new DocumentBuilder()
       .setTitle('API')
       .setDescription('Api Description')
       .setVersion(pkg.version)
       .build();
-  
+
     const document = SwaggerModule.createDocument(app, config);
     SwaggerModule.setup('docs', app, document);
 
@@ -78,7 +86,7 @@ export class CustomServer {
     if (this.config.sslConfig) {
       this.server = https.createServer(
         this.loadSslCredentials(),
-        httpAdapter.getInstance()
+        httpAdapter.getInstance(),
       );
     } else {
       this.server = http.createServer(httpAdapter.getInstance());
@@ -96,7 +104,7 @@ export class CustomServer {
     return new Promise((resolve, reject) => {
       this.server.listen(this.config.port, () => {
         this.logger.log(
-          `Server running on port ${this.config.port} (${this.config.sslConfig ? 'HTTPS' : 'HTTP'})`
+          `Server running on port ${this.config.port} (${this.config.sslConfig ? 'HTTPS' : 'HTTP'})`,
         );
         resolve();
       });
@@ -125,4 +133,3 @@ export class CustomServer {
     });
   }
 }
-

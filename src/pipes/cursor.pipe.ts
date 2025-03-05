@@ -1,6 +1,7 @@
+import { BadRequestException, Injectable, PipeTransform } from '@nestjs/common';
+
 import { CURSOR_PIPE_FORMAT } from '@/errors/errors.constants';
 import { parseObjectLiteral } from '@/helpers/parse-object-literal';
-import { BadRequestException, Injectable, PipeTransform } from '@nestjs/common';
 
 /** Convert a string like "id: 12, b: 'Anand'" to { id: 12, name: "Anand" } */
 @Injectable()

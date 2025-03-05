@@ -1,8 +1,9 @@
-import { Expose } from '@/prisma/prisma.interface';
-import { PrismaService } from '@/prisma/prisma.service';
 import { Injectable } from '@nestjs/common';
 import type { Prisma } from '@prisma/client';
 import { AuditLog } from '@prisma/client';
+
+import { Expose } from '@/prisma/prisma.interface';
+import { PrismaService } from '@/prisma/prisma.service';
 
 @Injectable()
 export class AuditLogsService {

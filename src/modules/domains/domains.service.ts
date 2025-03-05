@@ -7,23 +7,25 @@ import {
 import { ConfigService } from '@nestjs/config';
 import type { Prisma } from '@prisma/client';
 import { Domain } from '@prisma/client';
+import axios from 'axios';
 import { URL } from 'url';
+
 import {
   DOMAIN_NOT_FOUND,
   DOMAIN_NOT_VERIFIED,
   INVALID_DOMAIN,
   UNAUTHORIZED_RESOURCE,
 } from '@/errors/errors.constants';
+import { Expose } from '@/prisma/prisma.interface';
+import { PrismaService } from '@/prisma/prisma.service';
+import { DnsService } from '@/providers/dns/dns.service';
 import { TokensService } from '@/providers/tokens/tokens.service';
+
 import {
   DOMAIN_VERIFICATION_HTML,
   DOMAIN_VERIFICATION_TXT,
 } from './domains.constants';
 import { DomainVerificationMethods } from './domains.interface';
-import { PrismaService } from '@/prisma/prisma.service';
-import { Expose } from '@/prisma/prisma.interface';
-import { DnsService } from '@/providers/dns/dns.service';
-import axios from 'axios';
 
 @Injectable()
 export class DomainsService {
@@ -58,9 +60,12 @@ export class DomainsService {
     );
     if (parsedProfilePicture.hostname === 'ui-avatars.com')
       try {
-        const img = await axios.get('https://logo.clearbit.com/${data.domain}', {
-          responseType: 'arraybuffer',
-        }); 
+        const img = await axios.get(
+          'https://logo.clearbit.com/${data.domain}',
+          {
+            responseType: 'arraybuffer',
+          },
+        );
         if (img.data.byteLength > 1)
           await this.prisma.group.update({
             where: { id: groupId },
@@ -145,7 +150,7 @@ export class DomainsService {
             'meta.domainVerificationFile' ?? 'prepai-verify.txt',
           )}`,
         );
-        verified = data.includes(domain.verificationCode); 
+        verified = data.includes(domain.verificationCode);
       } catch (error) {}
       if (verified) {
         await this.prisma.domain.update({

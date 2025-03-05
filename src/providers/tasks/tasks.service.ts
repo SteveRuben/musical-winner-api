@@ -1,14 +1,14 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
+import { Cron, CronExpression } from '@nestjs/schedule';
 
 import { Configuration } from '@/config/configuration.interface';
 import { DomainsService } from '@/modules/domains/domains.service';
 import { MetricsService } from '@/modules/metrics/metrics.service';
 import { UsersService } from '@/modules/users/users.service';
-import { ElasticSearchService } from '../elasticsearch/elasticsearch.service';
 import { PrismaService } from '@/prisma/prisma.service';
-import { Cron, CronExpression } from '@nestjs/schedule';
 
+import { ElasticSearchService } from '../elasticsearch/elasticsearch.service';
 
 @Injectable()
 export class TasksService {
@@ -63,9 +63,8 @@ export class TasksService {
 
   @Cron(CronExpression.EVERY_DAY_AT_3PM)
   async deleteOldLogs() {
-    const tracking = this.configService.get<Configuration['tracking']>(
-      'tracking',
-    );
+    const tracking =
+      this.configService.get<Configuration['tracking']>('tracking');
     if (tracking.deleteOldLogs)
       return this.elasticSearchService.deleteOldRecords(
         tracking.index,

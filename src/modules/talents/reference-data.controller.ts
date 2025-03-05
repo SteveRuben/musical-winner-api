@@ -1,8 +1,9 @@
 // src/reference-data/reference-data.controller.ts
-import { PrismaService } from '@/prisma/prisma.service';
+import { Public } from '@modules/auth/public.decorator';
 import { Controller, Get } from '@nestjs/common';
 import { ExperienceLevel, ExpertiseArea } from '@prisma/client';
-import { Public } from '@modules/auth/public.decorator';
+
+import { PrismaService } from '@/prisma/prisma.service';
 
 @Public()
 @Controller('reference-data')

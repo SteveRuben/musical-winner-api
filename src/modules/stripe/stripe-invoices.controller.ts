@@ -1,8 +1,10 @@
 import { Controller, Get, Param, ParseIntPipe, Query } from '@nestjs/common';
 import Stripe from 'stripe';
+
+import { Scopes } from '@/modules/auth/scope.decorator';
 import { CursorPipe } from '@/pipes/cursor.pipe';
 import { OptionalIntPipe } from '@/pipes/optional-int.pipe';
-import { Scopes } from '@/modules/auth/scope.decorator';
+
 import { StripeService } from './stripe.service';
 
 @Controller('groups/:groupId/invoices')

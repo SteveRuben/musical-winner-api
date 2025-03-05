@@ -6,6 +6,7 @@ import {
   Session,
   User,
 } from '@prisma/client';
+
 import { Expose } from './prisma.interface';
 
 @Injectable()

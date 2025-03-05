@@ -1,7 +1,7 @@
-import { Controller, Post, Get, Body, Req, Param } from '@nestjs/common';
-import { SurveysService } from './surveys.service';
-import { CreateSurveyResponseDto } from './dto';
+import { Body, Controller, Get, Param, Post, Req } from '@nestjs/common';
 
+import { CreateSurveyResponseDto } from './dto';
+import { SurveysService } from './surveys.service';
 
 @Controller('surveys')
 export class SurveysController {

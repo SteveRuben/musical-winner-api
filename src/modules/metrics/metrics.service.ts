@@ -1,8 +1,10 @@
 import { Injectable } from '@nestjs/common';
 import CircularBuffer from 'circularbuffer';
 import pidusage from 'pidusage';
-import type { ProcessMetricData } from './metrics.interface';
+
 import { PrismaService } from '@/prisma/prisma.service';
+
+import type { ProcessMetricData } from './metrics.interface';
 
 @Injectable()
 export class MetricsService {

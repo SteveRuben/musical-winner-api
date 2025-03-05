@@ -1,6 +1,7 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { VideoProviderFactory } from './providers/video-provider.factory';
+
 import { MeetingsConfigService } from './meetings-config.service';
+import { VideoProviderFactory } from './providers/video-provider.factory';
 import { RoomService } from './room.service';
 
 @Injectable()
@@ -23,15 +24,30 @@ export class MeetingsService {
     return { token };
   }
 
-  async createMeeting(template: any, actorId: string, sessionId: string, templateName: string) {
-    const room = await this.roomService.createRoom(template, actorId, sessionId, templateName);
+  async createMeeting(
+    template: any,
+    actorId: string,
+    sessionId: string,
+    templateName: string,
+  ) {
+    const room = await this.roomService.createRoom(
+      template,
+      actorId,
+      sessionId,
+      templateName,
+    );
     return {
-      newMeeting: room,//.serialize()
+      newMeeting: room, //.serialize()
     };
   }
 
   async createAnonymousMeeting(template: any, templateName: string) {
-    const room = await this.roomService.createRoom(template, null, null, templateName);
+    const room = await this.roomService.createRoom(
+      template,
+      null,
+      null,
+      templateName,
+    );
     return {
       warning: "don't use w/o making sure it's impossible otherwise",
       url: this.getRoomUrl(room.displayName, room.urlId),

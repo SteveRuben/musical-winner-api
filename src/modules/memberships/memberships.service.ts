@@ -1,3 +1,6 @@
+import { ApiKeysService } from '@modules/api-keys/api-keys.service';
+import { AuthService } from '@modules/auth/auth.service';
+import { GroupsService } from '@modules/groups/groups.service';
 import {
   BadRequestException,
   Injectable,
@@ -5,13 +8,9 @@ import {
   UnauthorizedException,
 } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import { Membership, User } from '@prisma/client';
 import type { Prisma } from '@prisma/client';
-import { ApiKeysService } from '@modules/api-keys/api-keys.service';
-import { AuthService } from '@modules/auth/auth.service';
-import { GroupsService } from '@modules/groups/groups.service';
-import { CreateMembershipInput } from './memberships.interface';
-import { TokensService } from '@/providers/tokens/tokens.service';
+import { Membership, User } from '@prisma/client';
+
 import {
   CANNOT_DELETE_SOLE_MEMBER,
   CANNOT_DELETE_SOLE_OWNER,
@@ -19,10 +18,13 @@ import {
   MEMBERSHIP_NOT_FOUND,
   UNAUTHORIZED_RESOURCE,
 } from '@/errors/errors.constants';
+import { safeEmail } from '@/helpers/safe-email';
+import { Expose } from '@/prisma/prisma.interface';
 import { PrismaService } from '@/prisma/prisma.service';
 import { MailService } from '@/providers/mail/mail.service';
-import { Expose } from '@/prisma/prisma.interface';
-import { safeEmail } from '@/helpers/safe-email';
+import { TokensService } from '@/providers/tokens/tokens.service';
+
+import { CreateMembershipInput } from './memberships.interface';
 
 @Injectable()
 export class MembershipsService {

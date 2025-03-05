@@ -8,13 +8,15 @@ import type { Prisma } from '@prisma/client';
 import { ApprovedSubnet } from '@prisma/client';
 import { compare, hash } from 'bcrypt';
 import anonymize from 'ip-anonymize';
+
+import { Expose } from '@/prisma/prisma.interface';
+import { PrismaService } from '@/prisma/prisma.service';
+
 import {
   APPROVED_SUBNET_NOT_FOUND,
   UNAUTHORIZED_RESOURCE,
 } from '../../errors/errors.constants';
 import { GeolocationService } from '../../providers/geolocation/geolocation.service';
-import { PrismaService } from '@/prisma/prisma.service';
-import { Expose } from '@/prisma/prisma.interface';
 
 @Injectable()
 export class ApprovedSubnetsService {

@@ -1,5 +1,6 @@
-import { PwnedService } from './pwned.service';
 import { randomBytes } from 'crypto';
+
+import { PwnedService } from './pwned.service';
 
 const pwnedService = new PwnedService();
 

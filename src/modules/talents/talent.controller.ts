@@ -1,8 +1,5 @@
 // talent.controller.ts
-import { FileInterceptor } from '@nestjs/platform-express';
-import { diskStorage } from 'multer';
-import * as path from 'path';
-import { SkillsService } from './skills.service';
+import { Public } from '@modules/auth/public.decorator';
 import {
   BadRequestException,
   Body,
@@ -12,11 +9,15 @@ import {
   UploadedFile,
   UseInterceptors,
 } from '@nestjs/common';
-import { TalentApplicationService } from './talentApplication.service';
+import { FileInterceptor } from '@nestjs/platform-express';
+import { diskStorage } from 'multer';
+import * as path from 'path';
+
+import { CreateTalentApplicationDto } from './create-talent-application.dto';
 import { ExperiencesService } from './experiences.service';
 import { ExpertiseAreasService } from './expertise-areas.service';
-import { CreateTalentApplicationDto } from './create-talent-application.dto';
-import { Public } from '@modules/auth/public.decorator';
+import { SkillsService } from './skills.service';
+import { TalentApplicationService } from './talentApplication.service';
 
 @Public()
 @Controller('talent')

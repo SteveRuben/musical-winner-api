@@ -1,6 +1,7 @@
 import { ConfigFactory } from '@nestjs/config/dist/interfaces';
 import { config } from 'dotenv';
 import { expand } from 'dotenv-expand';
+
 import { Configuration } from './configuration.interface';
 
 const envConfig = config();

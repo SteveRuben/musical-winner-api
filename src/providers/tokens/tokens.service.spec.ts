@@ -1,5 +1,6 @@
 import { ConfigService } from '@nestjs/config';
 import { sign } from 'jsonwebtoken';
+
 import { TokensService } from './tokens.service';
 
 const tokensService = new TokensService(

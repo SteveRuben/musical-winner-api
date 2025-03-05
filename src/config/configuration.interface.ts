@@ -9,11 +9,6 @@ export interface ApiKeyAuth {
       };
 }
 
-export interface BasicAuth {
-  username: string;
-  password: string;
-}
-
 export interface BearerAuth {
   bearer: string;
 }

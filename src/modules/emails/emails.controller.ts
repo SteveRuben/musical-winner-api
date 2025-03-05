@@ -10,15 +10,15 @@ import {
 } from '@nestjs/common';
 import { Email } from '@prisma/client';
 
+import { CursorPipe } from '@/pipes/cursor.pipe';
 import { OptionalIntPipe } from '@/pipes/optional-int.pipe';
 import { OrderByPipe } from '@/pipes/order-by.pipe';
 import { WherePipe } from '@/pipes/where.pipe';
+import { Expose } from '@/prisma/prisma.interface';
 
 import { Scopes } from '../auth/scope.decorator';
 import { CreateEmailDto } from './emails.dto';
 import { EmailsService } from './emails.service';
-import { Expose } from '@/prisma/prisma.interface';
-import { CursorPipe } from '@/pipes/cursor.pipe';
 
 @Controller('users/:userId/emails')
 export class EmailController {

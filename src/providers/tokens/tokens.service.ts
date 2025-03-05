@@ -1,5 +1,6 @@
-import { Injectable, UnauthorizedException } from '@nestjs/common';
+import { Injectable, Logger, UnauthorizedException } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
+import cryptoRandomString from 'crypto-random-string';
 import {
   decode,
   DecodeOptions,
@@ -9,11 +10,13 @@ import {
   VerifyOptions,
 } from 'jsonwebtoken';
 import { v4 } from 'uuid';
+
 import { INVALID_TOKEN } from '../../errors/errors.constants';
-import cryptoRandomString from 'crypto-random-string';
+
 
 @Injectable()
 export class TokensService {
+  private logger = new Logger(TokensService.name);
   constructor(private configService: ConfigService) {}
 
   /**
@@ -25,7 +28,7 @@ export class TokensService {
    */
   signJwt(
     subject: string,
-    payload: number | string | object | Buffer,
+    payload: number | string | object | Buffer, // eslint-disable-line
     expiresIn?: string,
     options?: SignOptions,
   ) {
@@ -83,31 +86,23 @@ export class TokensService {
    */
   async generateRandomString(
     length = 32,
-    charactersOrType = 'alphanumeric',
+    charactersOrType= 'alphanumeric',
   ): Promise<string> {
-    if (
-      [
-        'hex',
-        'base64',
-        'url-safe',
-        'numeric',
-        'distinguishable',
-        'ascii-printable',
-        'alphanumeric',
-      ].includes(charactersOrType)
-    )
-    return "error";
-     return cryptoRandomString({
-        length,
-        type: charactersOrType as
-          | 'hex'
-          | 'base64'
-          | 'url-safe'
-          | 'numeric'
-          | 'distinguishable'
-          | 'ascii-printable'
-          | 'alphanumeric',
-      });
+    this.logger.warn(length, charactersOrType);
     return cryptoRandomString({ length, characters: charactersOrType });
   }
+
+  /**
+   * Generate a cryptographically strong random string
+   * @param length - Length of returned string
+   * @param charactersOrType - Characters or one of the supported types
+   */
+  async generateRandomInt(
+    length = 32,
+    characters= '0123456789',
+  ): Promise<string> {
+    this.logger.warn(length, characters);
+    return cryptoRandomString({ length, characters: characters });
+  }
 }
+//cryptoRandomString({length: 10, characters: '0123456789'});

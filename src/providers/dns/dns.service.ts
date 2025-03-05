@@ -1,9 +1,11 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import dns from 'dns';
+
 import { RecordResult, RecordType } from './dns.interface';
 
 @Injectable()
 export class DnsService {
+  private logger = new Logger(DnsService.name);
   async lookup(
     hostname: string,
     recordType: RecordType,
@@ -11,6 +13,7 @@ export class DnsService {
     try {
       return await this.unsafeLookup(hostname, recordType);
     } catch (error) {
+      this.logger.warn(error);
       return [];
     }
   }

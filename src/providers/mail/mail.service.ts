@@ -7,10 +7,12 @@ import * as nodemailer from 'nodemailer';
 import Mail from 'nodemailer/lib/mailer';
 import SESTransport from 'nodemailer/lib/ses-transport';
 import PQueue from 'p-queue';
-import pRetry from 'p-retry'; 
+import pRetry from 'p-retry';
 import { join } from 'path';
-import { MailOptions } from './mail.interface';
+
 import { Configuration } from '@/config/configuration.interface';
+
+import { MailOptions } from './mail.interface';
 
 type Func<T> = (val: T) => any;
 
@@ -25,14 +27,12 @@ const memoize = <T = any>(fn: Func<T>) => {
   return cached;
 };
 
-
 @Injectable()
 export class MailService {
   private readonly logger = new Logger(MailService.name);
   private transport: Mail;
   private config: Configuration['email'];
   private queue = new PQueue({ concurrency: 1 });
-  
 
   //private templateCache = new NodeCache({ stdTTL: 60 * 5 }); // 5 minutes
   //TODO: Read file and update process
@@ -72,13 +72,12 @@ export class MailService {
                 `Mail to ${options.to} failed, retrying (${error.retriesLeft} attempts left)`,
                 error.name,
               );
-              console.log(error);
             },
           },
         ),
       )
       .then(() => {})
-      .catch(() => {}); 
+      .catch(() => {});
   }
 
   private async sendMail(options: Mail.Options & MailOptions) {

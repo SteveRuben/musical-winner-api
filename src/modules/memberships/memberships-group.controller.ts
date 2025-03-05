@@ -1,3 +1,5 @@
+import { AuditLog } from '@modules/audit-logs/audit-log.decorator';
+import { Scopes } from '@modules/auth/scope.decorator';
 import {
   Body,
   Controller,
@@ -11,18 +13,18 @@ import {
   Query,
 } from '@nestjs/common';
 import { Membership } from '@prisma/client';
+
 import { CursorPipe } from '@/pipes/cursor.pipe';
 import { OptionalIntPipe } from '@/pipes/optional-int.pipe';
 import { OrderByPipe } from '@/pipes/order-by.pipe';
 import { WherePipe } from '@/pipes/where.pipe';
-import { AuditLog } from '@modules/audit-logs/audit-log.decorator';
-import { Scopes } from '@modules/auth/scope.decorator';
+import { Expose } from '@/prisma/prisma.interface';
+
 import {
   CreateGroupMembershipDto,
   UpdateMembershipDto,
 } from './memberships.dto';
 import { MembershipsService } from './memberships.service';
-import { Expose } from '@/prisma/prisma.interface';
 
 @Controller('groups/:groupId/memberships')
 export class GroupMembershipController {

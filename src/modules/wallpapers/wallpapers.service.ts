@@ -1,9 +1,15 @@
-import { PrismaService } from '@/prisma/prisma.service';
-import { Injectable, NotFoundException, BadRequestException } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import * as path from 'path';
-import { CreateWallpaperDto, WallpaperResponseDto } from './dto';
 import sharp from 'sharp';
+
+import { PrismaService } from '@/prisma/prisma.service';
+
+import { CreateWallpaperDto, WallpaperResponseDto } from './dto';
 
 @Injectable()
 export class WallpapersService {
@@ -15,7 +21,7 @@ export class WallpapersService {
   async createWallpaper(
     file: Express.Multer.File,
     user: { id: number },
-    createWallpaperDto: CreateWallpaperDto
+    createWallpaperDto: CreateWallpaperDto,
   ): Promise<WallpaperResponseDto> {
     const wallpaperDirectory = this.configService.get('WALLPAPERS_DIRECTORY');
     const fileName = `${Date.now()}-${file.originalname}`;
@@ -39,9 +45,12 @@ export class WallpapersService {
       // Sauvegarder le fichier
       const filePath = path.join(wallpaperDirectory, fileName);
       await this.saveFile(file, filePath);
-      
+
       // Générer et sauvegarder la miniature
-      await this.generateThumbnail(filePath, path.join(wallpaperDirectory, 'thumbnails', fileName));
+      await this.generateThumbnail(
+        filePath,
+        path.join(wallpaperDirectory, 'thumbnails', fileName),
+      );
 
       return wallpaper;
     } catch (error) {
@@ -51,7 +60,7 @@ export class WallpapersService {
 
   extractDominantColor = async (data: Buffer) => {
     const image = sharp(data);
-  
+
     const stats = await image.stats();
     const { r, g, b } = stats.dominant;
     return `rgb(${r}, ${g}, ${b})`;
@@ -60,7 +69,7 @@ export class WallpapersService {
   async deleteWallpaper(id: number, userId: number): Promise<void> {
     const wallpaper = await this.prisma.wallpaper.findUnique({
       where: { id },
-      include: { roomStateUsages: true }
+      include: { roomStateUsages: true },
     });
 
     if (!wallpaper) {
@@ -77,7 +86,7 @@ export class WallpapersService {
 
     try {
       await this.prisma.wallpaper.delete({
-        where: { id }
+        where: { id },
       });
 
       // Supprimer les fichiers physiques
@@ -90,7 +99,9 @@ export class WallpapersService {
     }
   }
 
-  async getWallpapersForActor(actorId: number): Promise<WallpaperResponseDto[]> {
+  async getWallpapersForActor(
+    actorId: number,
+  ): Promise<WallpaperResponseDto[]> {
     return await this.prisma.wallpaper.findMany({
       where: {
         OR: [
@@ -111,11 +122,17 @@ export class WallpapersService {
     });
   }
 
-  private async saveFile(file: Express.Multer.File, filePath: string): Promise<void> {
+  private async saveFile(
+    file: Express.Multer.File,
+    filePath: string,
+  ): Promise<void> {
     // Implémenter la logique de sauvegarde du fichier
   }
 
-  private async generateThumbnail(sourcePath: string, thumbnailPath: string): Promise<void> {
+  private async generateThumbnail(
+    sourcePath: string,
+    thumbnailPath: string,
+  ): Promise<void> {
     // Implémenter la logique de génération de miniature
   }
 

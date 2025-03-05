@@ -1,8 +1,3 @@
-import { PREPAI_AUDIT_LOG_DATA } from '@/modules/audit-logs/audit-log.constants';
-import { UserRequest } from '@/modules/auth/auth.interface';
-import { WebhooksService } from '@/modules/webhooks/webhooks.service';
-import { PrismaService } from '@/prisma/prisma.service';
-import { GeolocationService } from '@/providers/geolocation/geolocation.service';
 import {
   CallHandler,
   ExecutionContext,
@@ -16,6 +11,12 @@ import { getClientIp } from 'request-ip';
 import { Observable } from 'rxjs';
 import { tap } from 'rxjs/operators';
 import UAParser from 'ua-parser-js';
+
+import { PREPAI_AUDIT_LOG_DATA } from '@/modules/audit-logs/audit-log.constants';
+import { UserRequest } from '@/modules/auth/auth.interface';
+import { WebhooksService } from '@/modules/webhooks/webhooks.service';
+import { PrismaService } from '@/prisma/prisma.service';
+import { GeolocationService } from '@/providers/geolocation/geolocation.service';
 
 @Injectable()
 export class AuditLogger implements NestInterceptor {

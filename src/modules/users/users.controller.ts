@@ -1,3 +1,6 @@
+import { UserRequest } from '@modules/auth/auth.interface';
+import { RateLimit } from '@modules/auth/rate-limit.decorator';
+import { Scopes } from '@modules/auth/scope.decorator';
 import {
   BadRequestException,
   Body,
@@ -15,17 +18,16 @@ import {
 } from '@nestjs/common';
 import { FilesInterceptor } from '@nestjs/platform-express';
 import { User } from '@prisma/client';
+
+import { Files } from '@/helpers/interfaces';
 import { CursorPipe } from '@/pipes/cursor.pipe';
 import { OptionalIntPipe } from '@/pipes/optional-int.pipe';
 import { OrderByPipe } from '@/pipes/order-by.pipe';
 import { WherePipe } from '@/pipes/where.pipe';
-import { UserRequest } from '@modules/auth/auth.interface';
-import { RateLimit } from '@modules/auth/rate-limit.decorator';
-import { Scopes } from '@modules/auth/scope.decorator';
+import { Expose } from '@/prisma/prisma.interface';
+
 import { UpdateUserDto } from './users.dto';
 import { UsersService } from './users.service';
-import { Expose } from '@/prisma/prisma.interface';
-import { Files } from '@/helpers/interfaces';
 
 @Controller('users')
 export class UserController {

@@ -1,6 +1,6 @@
-import { PrismaService } from '@/prisma/prisma.service';
 import { Injectable } from '@nestjs/common';
 
+import { PrismaService } from '@/prisma/prisma.service';
 
 @Injectable()
 export class RoomRepository {
@@ -9,12 +9,12 @@ export class RoomRepository {
   async findByRoute(route: string) {
     // Implémentez la logique de recherche avec Prisma
     const room = await this.prisma.room.findFirst({
-      where: { 
+      where: {
         routes: {
           some: {
-            route
-          }
-        }
+            route,
+          },
+        },
       },
       include: {
         state: true,
@@ -24,7 +24,11 @@ export class RoomRepository {
     return room;
   }
 
-  async createFromTemplate(templateName: string, template: any, accountId: string | null) {
+  async createFromTemplate(
+    templateName: string,
+    template: any,
+    accountId: string | null,
+  ) {
     // Implémentez la logique de création avec Prisma
     const room = await this.prisma.room.create({
       data: {
@@ -47,13 +51,13 @@ export class RoomRepository {
     const membership = await this.prisma.roomMembership.findFirst({
       where: {
         roomId: parseInt(roomId),
-        accountId: parseInt(actorId)
-      }
+        accountId: parseInt(actorId),
+      },
     });
 
     if (membership) {
       await this.prisma.roomMembership.delete({
-        where: { id: membership.id }
+        where: { id: membership.id },
       });
     }
   }

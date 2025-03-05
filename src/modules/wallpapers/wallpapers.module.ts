@@ -1,10 +1,11 @@
 import { Module } from '@nestjs/common';
-import { MulterModule } from '@nestjs/platform-express';
 import { ConfigModule, ConfigService } from '@nestjs/config';
-import { WallpapersController } from './wallpapers.controller';
-import { WallpapersService } from './wallpapers.service';
+import { MulterModule } from '@nestjs/platform-express';
+
 import { PrismaModule } from '@/prisma/prisma.module';
 
+import { WallpapersController } from './wallpapers.controller';
+import { WallpapersService } from './wallpapers.service';
 
 @Module({
   imports: [

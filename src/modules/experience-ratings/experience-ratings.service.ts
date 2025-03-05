@@ -1,8 +1,13 @@
-import { PrismaService } from '@/prisma/prisma.service';
-import { Injectable, NotFoundException, UnauthorizedException } from '@nestjs/common';
-import { NotificationService } from '@/providers/shared/notification.service';
-import { CreateExperienceRatingDto, UpdateExperienceRatingDto } from './dto';
+import {
+  Injectable,
+  NotFoundException,
+  UnauthorizedException,
+} from '@nestjs/common';
 
+import { PrismaService } from '@/prisma/prisma.service';
+import { NotificationService } from '@/providers/shared/notification.service';
+
+import { CreateExperienceRatingDto, UpdateExperienceRatingDto } from './dto';
 
 @Injectable()
 export class ExperienceRatingsService {
@@ -26,7 +31,11 @@ export class ExperienceRatingsService {
       },
     });
 
-    await this.notificationService.notifyExperienceRating(rating, accountId, false);
+    await this.notificationService.notifyExperienceRating(
+      rating,
+      accountId,
+      false,
+    );
 
     return rating;
   }
@@ -56,7 +65,11 @@ export class ExperienceRatingsService {
       },
     });
 
-    await this.notificationService.notifyExperienceRating(updated, accountId, true);
+    await this.notificationService.notifyExperienceRating(
+      updated,
+      accountId,
+      true,
+    );
 
     return updated;
   }

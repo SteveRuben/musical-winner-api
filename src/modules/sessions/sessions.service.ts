@@ -1,16 +1,17 @@
 import {
-  SESSION_NOT_FOUND,
-  UNAUTHORIZED_RESOURCE,
-} from '@/errors/errors.constants';
-import { Expose } from '@/prisma/prisma.interface';
-import { PrismaService } from '@/prisma/prisma.service';
-import {
   Injectable,
   NotFoundException,
   UnauthorizedException,
 } from '@nestjs/common';
 import type { Prisma } from '@prisma/client';
 import { Session } from '@prisma/client';
+
+import {
+  SESSION_NOT_FOUND,
+  UNAUTHORIZED_RESOURCE,
+} from '@/errors/errors.constants';
+import { Expose } from '@/prisma/prisma.interface';
+import { PrismaService } from '@/prisma/prisma.service';
 
 @Injectable()
 export class SessionsService {

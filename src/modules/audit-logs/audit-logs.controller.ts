@@ -1,13 +1,14 @@
 import { Controller, Get, Query } from '@nestjs/common';
 import { AuditLog } from '@prisma/client';
 
-import { AuditLogsService } from './audit-logs.service';
 import { Scopes } from '@/modules/auth/scope.decorator';
-import { OptionalIntPipe } from '@/pipes/optional-int.pipe';
-import { Expose } from '@/prisma/prisma.interface';
-import { OrderByPipe } from '@/pipes/order-by.pipe';
 import { CursorPipe } from '@/pipes/cursor.pipe';
+import { OptionalIntPipe } from '@/pipes/optional-int.pipe';
+import { OrderByPipe } from '@/pipes/order-by.pipe';
 import { WherePipe } from '@/pipes/where.pipe';
+import { Expose } from '@/prisma/prisma.interface';
+
+import { AuditLogsService } from './audit-logs.service';
 
 @Controller('audit-logs')
 export class AuditLogController {

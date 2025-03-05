@@ -1,9 +1,10 @@
-import { Configuration } from '@/config/configuration.interface';
-import { UserRequest } from '@/modules/auth/auth.interface';
 //import { ElasticSearchService } from '@/providers/elasticsearch/elasticsearch.service';
 import { Injectable, NestMiddleware } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { NextFunction, Response } from 'express';
+
+import { Configuration } from '@/config/configuration.interface';
+import { UserRequest } from '@/modules/auth/auth.interface';
 
 @Injectable()
 export class ApiLoggerMiddleware implements NestMiddleware {

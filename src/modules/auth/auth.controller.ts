@@ -8,6 +8,9 @@ import {
   Post,
 } from '@nestjs/common';
 import { User } from '@prisma/client';
+
+import { Expose } from '@/prisma/prisma.interface';
+
 import {
   ForgotPasswordDto,
   LoginDto,
@@ -21,7 +24,6 @@ import { TokenResponse, TotpTokenResponse } from './auth.interface';
 import { AuthService } from './auth.service';
 import { Public } from './public.decorator';
 import { RateLimit } from './rate-limit.decorator';
-import { Expose } from '@/prisma/prisma.interface';
 
 @Controller('auth')
 @Public()

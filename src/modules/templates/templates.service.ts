@@ -1,5 +1,6 @@
-import { PrismaService } from '@/prisma/prisma.service';
 import { Injectable } from '@nestjs/common';
+
+import { PrismaService } from '@/prisma/prisma.service';
 
 @Injectable()
 export class TemplatesService {
@@ -10,7 +11,7 @@ export class TemplatesService {
       data: {
         name,
         data,
-        creatorId
+        creatorId,
       },
     });
   }

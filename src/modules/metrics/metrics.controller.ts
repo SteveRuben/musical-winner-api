@@ -1,5 +1,6 @@
-import { Controller, Get, Post } from '@nestjs/common';
 import { Scopes } from '@modules/auth/scope.decorator';
+import { Controller, Get, Post } from '@nestjs/common';
+
 import { ProcessMetricData } from './metrics.interface';
 import { MetricsService } from './metrics.service';
 

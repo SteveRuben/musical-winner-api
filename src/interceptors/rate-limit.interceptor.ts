@@ -1,6 +1,3 @@
-import { Configuration } from '@/config/configuration.interface';
-import { RATE_LIMIT_EXCEEDED } from '@/errors/errors.constants';
-import { UserRequest } from '@/modules/auth/auth.interface';
 import {
   CallHandler,
   ExecutionContext,
@@ -14,6 +11,10 @@ import { Reflector } from '@nestjs/core';
 import { RateLimiterMemory } from 'rate-limiter-flexible';
 import { getClientIp } from 'request-ip';
 import { Observable } from 'rxjs';
+
+import { Configuration } from '@/config/configuration.interface';
+import { RATE_LIMIT_EXCEEDED } from '@/errors/errors.constants';
+import { UserRequest } from '@/modules/auth/auth.interface';
 
 @Injectable()
 export class RateLimitInterceptor implements NestInterceptor {
