@@ -22,6 +22,7 @@ async function bootstrap() {
   app.useWebSocketAdapter(new IoAdapter(app));
   await server.initialize(app);
   await app.init();
+  app.enableCors();
   await server.listen();
 }
 
