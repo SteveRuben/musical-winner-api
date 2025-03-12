@@ -16,9 +16,11 @@ export const render = (
   markdown: string,
   view: any,
 
-  partials?: Record<string, string> | ((partialName: string) => string | undefined),
+  partials?:
+    | Record<string, string>
+    | ((partialName: string) => string | undefined),
   tags?: [string, string],
-  options?: MarkedOptions
+  options?: MarkedOptions,
 ) => {
   const md = mustache(markdown, view || {}, partials, tags);
   return [md, marked.parse(md, options)];

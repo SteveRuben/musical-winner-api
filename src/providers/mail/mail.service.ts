@@ -1,6 +1,5 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-
 import { SES } from 'aws-sdk';
 import { promises as fs } from 'fs';
 import * as nodemailer from 'nodemailer';
@@ -16,17 +15,6 @@ import { MailOptions } from './mail.interface';
 import { render } from './render';
 
 type Func<T> = (val: T) => any;
-
-
-
-
-
-
-
-
-
-
-
 
 const memoize = <T = any>(fn: Func<T>) => {
   const cache = new Map();
